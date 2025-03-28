@@ -1,9 +1,10 @@
-use axum::{routing::get, Router};
 
+mod user_input;
+mod db;
+mod auth;
+mod qr_generator;
+mod routes;
 
-async fn root() -> &'static str {
-    "Hello Qr_code Running"
-}
 #[tokio::main]
 async fn main() {
     let addr = "127.0.0.1:7878";
@@ -19,8 +20,7 @@ async fn main() {
         }
     };
     
-    let app = Router::new().route("/", get(root));
-    let response = axum::serve(listener, app).await;
+    let response = axum::serve(listener, routes::create_routes()).await;
 
     match response {
         Ok(_) => {
