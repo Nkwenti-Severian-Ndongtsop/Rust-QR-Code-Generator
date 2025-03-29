@@ -1,6 +1,8 @@
 use reqwest::Client;
 use serde::Deserialize;
 use serde::Serialize;
+use std::fs::File;
+use std::io::Write;
 use user_input::user_input;
 
 mod auth;
@@ -16,32 +18,43 @@ pub struct QRRequest {
 
 #[tokio::main]
 async fn main() {
-    let url = "http://121.0.0.1:7878/generate-qr";
+    let url = "http://127.0.0.1:7878/generate-qr";
+    
     let (f, s, d) = user_input();
 
     let request_input = QRRequest {
         data: d,
         size: s,
-        format: f,
+        format: f.clone()
     };
 
     let client = Client::new();
     match client.post(url).json(&request_input).send().await {
         Ok(response) => {
             if response.status().is_success() {
-                let body = match response
-                    .text()
-                    .await {
-                        Ok(res) => {
-                            res
-                        },
-                        Err(e) => {
-                            eprint!("Error generating QR-Code: {}", e);
-                            return
-                        },
-                    };
-                    
-                println!("QR Code generated successfully: {}", body);
+                let body = match response.bytes().await {
+                    Ok(bytes) => bytes,
+                    Err(e) => {
+                        eprintln!("Error reading QR code data: {}", e);
+                        return;
+                    }
+                };
+
+                let file_name = format!("qrcode.{:?}", f); // Change the file extension if needed
+                let mut file = match File::create(&file_name) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        eprintln!("Error creating file: {}", e);
+                        return;
+                    }
+                };
+
+                if let Err(e) = file.write_all(&body) {
+                    eprintln!("Error writing to file: {}", e);
+                } else {
+                    println!("QR Code saved successfully as {}", file_name);
+                    println!("Thanks for using QR-Code: by @Nkwenti@Severian\n");
+                }
             } else {
                 eprintln!("Failed to generate QR Code. Status: {}", response.status());
             }
