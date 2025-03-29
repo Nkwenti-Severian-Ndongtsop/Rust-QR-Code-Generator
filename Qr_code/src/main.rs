@@ -19,13 +19,13 @@ pub struct QRRequest {
 #[tokio::main]
 async fn main() {
     let url = "http://127.0.0.1:7878/generate-qr";
-    
+
     let (f, s, d) = user_input();
 
     let request_input = QRRequest {
         data: d,
         size: s,
-        format: f.clone()
+        format: f,
     };
 
     let client = Client::new();
@@ -40,7 +40,13 @@ async fn main() {
                     }
                 };
 
-                let file_name = format!("qrcode.{:?}", f); // Change the file extension if needed
+                let output_dir = "QR_CODES";
+                std::fs::create_dir_all(output_dir).unwrap_or_else(|e| {
+                    eprintln!("Error creating output directory: {}", e);
+                    std::process::exit(1);
+                });
+
+                let file_name = format!("{}/qrcode.{}", output_dir, request_input.format);
                 let mut file = match File::create(&file_name) {
                     Ok(f) => f,
                     Err(e) => {
