@@ -20,7 +20,7 @@ pub async fn generate_qr_handler(Json(payload): Json<QRRequest>) -> impl IntoRes
     let format = payload.format;
     let qr_image = generate_qr(payload.data.as_str(), size, format.as_str());
 
-    println!("Thanks for using QR-Code: by @Nkwenti@severian\n");
+    println!("Thanks for using QR-Code: by @Nkwenti@severian");
 
     qr_image
 }
