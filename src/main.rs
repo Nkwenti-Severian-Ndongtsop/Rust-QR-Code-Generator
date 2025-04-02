@@ -1,5 +1,4 @@
 use dotenvy::dotenv;
-use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use sqlx::postgres::PgPoolOptions;
 use std::env;
@@ -19,7 +18,6 @@ pub struct QRRequest {
 async fn main() {
     dotenv().ok(); // Load environment variables
 
-    let url = "http://127.0.0.1:7878/generate-qr";
     let args: Vec<String> = env::args().collect();
     
     if args.len() != 4 {
@@ -60,27 +58,25 @@ async fn main() {
                 .await
                 .expect("Failed to connect to the database");
 
-            sqlx::query("INSERT INTO DATA (data_input, image_type, image_size) VALUES ($1, $2, $3)")
+            match sqlx::query("INSERT INTO DATA (data_input, image_type, image_size) VALUES ($1, $2, $3)")
                 .bind(&request_input.data)
                 .bind(&request_input.format)
                 .bind(request_input.size as i64)
                 .execute(&pool)
-                .await
-                .expect("Database error");
+                .await {
+                    Ok(_) => {},
+                    Err(e) => {
+                        eprintln!("Error: {}", e);
+                        return
+                    }
+                }
+                
 
-            println!("\n🎉 QR Code stored in PostgreSQL!");
-            println!("\n\nThanks for using QR-Code: by @Nkwenti @Severian\n");
+            println!("\nThanks for using QR-Code: by @Nkwenti @Severian");
         }
         Err(e) => {
             eprintln!("❌ Failed to generate QR Code. Error: {}", e);
             std::process::exit(1);
         }
-    }
-
-    // Send request to server
-    let client = Client::new();
-    if let Err(e) = client.post(url).json(&request_input).send().await {
-        eprintln!("⚠️ Error: Could not connect to server at {}. Ensure the server is running.", url);
-        eprintln!("Details: {}", e);
     }
 }
