@@ -1,6 +1,3 @@
-
-
-
 mod routes;
 mod qr_generator;
 
