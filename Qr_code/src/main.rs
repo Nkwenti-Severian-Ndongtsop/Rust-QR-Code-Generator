@@ -3,15 +3,13 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::fs::File;
 use std::io::Write;
-use user_input::user_input;
 
 mod auth;
 mod db;
-mod user_input;
 
 #[derive(Serialize, Deserialize)]
 pub struct QRRequest {
-    data: String,
+    data: String,  
     size: Option<u32>,
     format: String,
 }
@@ -20,12 +18,17 @@ pub struct QRRequest {
 async fn main() {
     let url = "http://127.0.0.1:7878/generate-qr";
 
-    let (f, s, d) = user_input();
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() < 4 {
+        eprintln!("Usage: cargo run <data> <format> <size>");
+        return;
+    }
+
 
     let request_input = QRRequest {
-        data: d,
-        size: s,
-        format: f,
+        data: args[1].clone(),
+        format: args[2].clone(),
+        size: Some(args[3].trim().parse().expect("Invalid size")),
     };
 
     let client = Client::new();
