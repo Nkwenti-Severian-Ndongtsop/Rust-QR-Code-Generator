@@ -5,8 +5,8 @@ A blazing-fast and simple command-line application to generate qr-image based on
 ## ✨ Features
 
 - 🚀 Many image formats
-- 🔍 Supports command-line input for data
-- 🌍 Free size argument input
+- 🔍 Supports command-line inputs for data
+- 🌍 Any size argument input
 
 ## 🛠️ Installation
 
