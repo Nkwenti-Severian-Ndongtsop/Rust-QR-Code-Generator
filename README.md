@@ -1,6 +1,6 @@
-# Rust-QR-Code-Generator
+# Rust-QR-Image-Generator
 
-A blazing-fast and simple command-line application to generate qr-code based on user arguments using Rust.
+A blazing-fast and simple command-line application to generate qr-image based on user arguments using Rust.
 
 ## ✨ Features
 - 🚀 Many image formats
@@ -20,12 +20,12 @@ export PATH="$HOME/.cargo/bin:$PATH"
 ```
 
 ```sh
-qr-code [data] [format] [size]
+qr-image [data] [format] [size]
 ```
 
 Example:
 ```sh
-qr-code [https://hub.docker.com/] [jpeg] [600]
+qr-image [https://hub.docker.com/] [jpeg] [600]
 ```
 
 
