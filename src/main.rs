@@ -60,6 +60,7 @@ async fn main() {
                         res
                     },
                     Err(_) => {
+                        println!("\nThanks for using QR-Code: by @Nkwenti @Severian");
                         return;
                     }
                 };
