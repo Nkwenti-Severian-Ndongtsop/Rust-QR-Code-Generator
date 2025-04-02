@@ -1,6 +1,6 @@
-use axum::Error;
 use qrcode::QrCode;
 use image::Luma;
+use reqwest::Error;
 use std::io::Cursor;
 
 pub fn generate_qr(data: &str, size: u32, format: &str) -> Result<Vec<u8>, Error> {
