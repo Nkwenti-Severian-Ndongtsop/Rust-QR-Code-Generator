@@ -1605,7 +1605,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "qr-code"
+name = "qr-image"
 version = "0.1.0"
 dependencies = [
  "dirs",
