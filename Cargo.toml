@@ -1,5 +1,5 @@
 [package]
-name = "qr-code"
+name = "qr-image"
 version = "0.1.0"
 edition = "2021"
 authors = ["Nkwenti-Severian <halamadrid651643565@gmail.com>"]
