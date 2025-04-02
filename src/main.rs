@@ -52,11 +52,18 @@ async fn main() {
 
             // Insert into database
             let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-            let pool = PgPoolOptions::new()
+            let pool = match PgPoolOptions::new()
                 .max_connections(5)
                 .connect(&database_url)
-                .await
-                .expect("Failed to connect to the database");
+                .await {
+                    Ok(res) => {
+                        res
+                    },
+                    Err(_) => {
+                        return;
+                    }
+                };
+                
 
             match sqlx::query("INSERT INTO DATA (data_input, image_type, image_size) VALUES ($1, $2, $3)")
                 .bind(&request_input.data)
